@@ -5,6 +5,8 @@
 laravel環境（nginx+php+mysql）が含まれる
 * 参考：https://qiita.com/ucan-lab/items/56c9dc3cf2e6762672f4
 
+空の`backend`ディレクトリを作っておくこと（あとで，ここにLaravelプロジェクトを作る）
+
 ### Laravelプロジェクトの作成
 
 `docker-compose up`が済んだら，`app-bash.cmd`を叩いてphpコンテナに入り以下のコマンドを実行する（pwdは`/work`）。
