@@ -1,0 +1,59 @@
+version: '2'
+services:
+  app:
+    container_name: "tomcat"
+    build:
+      context: .
+      dockerfile: ./tomcat/Dockerfile
+      args:
+        - http_proxy=$HTTP_PROXY
+        - https_proxy=$HTTPS_PROXY
+        - no_proxy=$NO_PROXY
+    environment:
+      - http_proxy=$HTTP_PROXY
+      - https_proxy=$HTTPS_PROXY
+      - no_proxy=$NO_PROXY
+    volumes:
+      - ./webapps:/webapps
+    ports:
+      - "8080:8080"
+      - "8000:8000"
+    depends_on:
+      - pgdb
+      - pgadm
+
+  pgdb:
+    container_name: "postgres"
+    build:
+      context: .
+      dockerfile: ./postgres/Dockerfile
+    volumes:
+      - ./postgres/initdb.d:/docker-entrypoint-initdb.d
+      - pgdb_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
+
+  pgadm:
+    container_name: "pgadmin"
+    image: dpage/pgadmin4:4.26
+    volumes:
+      - pgadm_data:/var/lib/pgadmin
+    ports:
+      - "8801:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: password
+    depends_on:
+      - pgdb
+
+volumes:
+  app_data:
+    driver: local
+  pgdb_data:
+    driver: local
+  pgadm_data:
+    driver: local
