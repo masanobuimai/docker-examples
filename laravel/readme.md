@@ -19,6 +19,7 @@ composer create-project --prefer-dist "laravel/laravel=8.*" .
 
 ### MySQLについて
 
+* docker-compose.yml の db 部分をmysqlにしておく
 * jdbc:mysql://localhost:3306/laravel_local
   * phper / secret
 
@@ -30,6 +31,22 @@ DB_PORT=3306
 DB_DATABASE=laravel_local
 DB_USERNAME=phper
 DB_PASSWORD=secret
+```
+
+### PostgreSQLについて
+
+* docker-compose.yml の db 部分をpostgresにしておく
+* jdbc:postgresql://localhost:5432/laravel_local
+  * postgres / password
+
+Laravelから見えるように `backend/.env` を以下のように修正する
+```
+DB_CONNECTION=pgsql
+DB_HOST=db
+DB_PORT=5432
+DB_DATABASE=laravel_local
+DB_USERNAME=postgres
+DB_PASSWORD=password
 ```
 
 ## プロジェクトをIntelliJで開く

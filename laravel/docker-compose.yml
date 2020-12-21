@@ -25,13 +25,26 @@ services:
       - ./infra/nginx/default.conf:/etc/nginx/conf.d/default.conf
     working_dir: /work
 
+#  db:
+#    container_name: "mysql"
+#    build: ./infra/mysql
+#    volumes:
+#      - db-store:/var/lib/mysql
+#    ports:
+#      - 3306:3306
   db:
-    container_name: "mysql"
-    build: ./infra/mysql
+    container_name: "postgres"
+    build:
+      context: ./infra/postgres
     volumes:
-      - db-store:/var/lib/mysql
+      - ./infra/postgres/initdb.d:/docker-entrypoint-initdb.d
+      - db-store:/var/lib/postgresql/data
     ports:
-      - 3306:3306
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: laravel_local
 
 volumes:
   db-store:
