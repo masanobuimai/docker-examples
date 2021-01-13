@@ -128,10 +128,51 @@ jdbc:postgresql://localhost:5432/laravel_local
 postgres / password
 ```
 
+## VSCodeから開発する
+
+### 必要な拡張
+
+* Remote Development
+  * https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack
+
+### はじめに（Remote Containerの設定）
+
+* VSCodeでこのディレクトリを開く
+* 左下の「`><`」から「Remote-Container: Reopen in Container」を選ぶ
+  * 「From 'docker-compose.yml'」と「app」を選ぶ
+  * しばらくするとRemote Containerに接続する
+* 左下の「`><`」から「Remote-Container: Reopen Locally」を選び，一旦Remote Containerを抜ける
+* `.devcontainer/devcontainer.json`を開き，以下のように修正する
+  * `"workspaceFolder": "/workspace"` を `"workspaceFolder": "/work"` に書き換える
+  * `"extensions": []`を以下のように書き換える
+```yml
+"extensions": [
+  "felixfbecker.php-intellisense",
+  "felixfbecker.php-debug",
+  "onecentlin.laravel-extension-pack",
+  "editorconfig.editorconfig",
+  "calebporzio.better-phpunit",
+  "neilbrayfield.php-docblocker"
+```
+* `.devcontainer/docker-compose.yml`を開き，最後の行（`command:～`）をコメントアウトする
+* 左下の「`><`」から「Remote-Container: Reopen Locally」を選び，Remote Containerに再接続する
+  * ローカルに戻ると「Reopn in Containerする？」と聞かれるので，再度Remote Containerに接続する
+  * 途中コンテナを「Rebuildするか？」と聞かれるのでRebuildする
+
+上記の手順でやったこと
+* Remote Containerを有効にする
+* Remote ContainerにPHP用のVSCode拡張を追加する
+* Remote Containerの作業ディレクトリを `/work`（ローカルの`./backend`）に設定する
+
+### 初回以降
+
+`.devcontainer`があるディレクトリを開けば「Remote Containerで開く？」と聞いてくるので，それに従うだけ。
+タイミングによってはnginxが落ちてる場合があるので，Docker Desktopなどから起動し直すこと。
+
 ## TODO（順不同）
 * nginxをapacheに変更する
 * phpのデバッガ設定
-* VSCodeでの利用方法
+* ~~VSCodeでの利用方法~~
 * duskの利用方法
 * phpUnitの利用方法
 * その他テストフレームワークの利用方法
