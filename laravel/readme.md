@@ -130,7 +130,7 @@ jdbc:postgresql://localhost:5432/laravel_local
 postgres / password
 ```
 
-## VScodeから開発する
+## VSCodeから開発する
 
 ### 必要な拡張
 
@@ -166,13 +166,33 @@ postgres / password
 * Remote ContainerにPHP用のVSCode拡張を追加する
 * Remote Containerの作業ディレクトリを `/var/www/html`（ローカルの`./backend`）に設定する
 
+#### デバッガの設定
+
+* Remote Containerに接続した状態で「Run (Ctrl+SHIFT+D)」を選び「create a launch.json file」をクリック，PHPを選ぶ
+* `launch.json`を以下の内容にする（`./backend/.vscode`にできる）
+```yml
+{
+  "version": "1.2.0",
+  "configurations": [
+    {
+      "name": "Listen for XDebug",
+      "type": "php",
+      "request": "launch",
+      "port": 9003
+    },
+  ]
+}
+```
+
 ### 初回以降
 
 `.devcontainer`があるディレクトリを開けば「Remote Containerで開く？」と聞いてくるので，それに従うだけ。
 
+デバッガはRemote Container内で，「Run (Ctrl+SHIFT+D)」→「Listen for XDebug」を選べば有効になる。
+
 ## TODO（順不同）
 * ~~nginxをapacheに変更する~~
-* phpのデバッガ設定
+* ~~phpのデバッガ設定~~
 * ~~VSCodeでの利用方法~~
 * duskの利用方法
 * phpUnitの利用方法
