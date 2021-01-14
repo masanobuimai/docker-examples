@@ -2,10 +2,12 @@
 
 ## 実行環境について
 
-laravel環境（nginx+php+postgresが含まれる
+laravel環境として，apache/php+postgresが含まれるdocker-composeを提供する。
+
 * 参考：
   * https://qiita.com/ucan-lab/items/56c9dc3cf2e6762672f4
   * https://qiita.com/cyclon2joker/items/39e620d3d16fa1f6edf0
+  * https://github.com/maip0902/DockerApachePHP
 
 ## 初期設定
 
@@ -14,7 +16,7 @@ laravel環境（nginx+php+postgresが含まれる
 1. 空の`backend`ディレクトリを作っておくこと（あとで，ここにLaravelプロジェクトを作る）
 1. `.env.example`をコピーして`.env`を作り，プロキシサーバの設定を記述する
 1. `docker-compose up`を実行して，phpコンテナにログインする（`app-bash.cmd`を実行するとログインできる）
-1. phpコンテナ内で以下のコマンドを実行する（pwdは`/work`）。
+1. phpコンテナ内で以下のコマンドを実行する（pwdは`/var/www/html`）。
 ```
 composer create-project --prefer-dist "laravel/laravel=8.*" .
 composer require --dev barryvdh/laravel-ide-helper
@@ -128,7 +130,7 @@ jdbc:postgresql://localhost:5432/laravel_local
 postgres / password
 ```
 
-## VSCodeから開発する
+## VScodeから開発する
 
 ### 必要な拡張
 
@@ -143,7 +145,7 @@ postgres / password
   * しばらくするとRemote Containerに接続する
 * 左下の「`><`」から「Remote-Container: Reopen Locally」を選び，一旦Remote Containerを抜ける
 * `.devcontainer/devcontainer.json`を開き，以下のように修正する
-  * `"workspaceFolder": "/workspace"` を `"workspaceFolder": "/work"` に書き換える
+  * `"workspaceFolder": "/workspace"` を `"workspaceFolder": "/var/www/html"` に書き換える
   * `"extensions": []`を以下のように書き換える
 ```yml
 "extensions": [
@@ -162,15 +164,14 @@ postgres / password
 上記の手順でやったこと
 * Remote Containerを有効にする
 * Remote ContainerにPHP用のVSCode拡張を追加する
-* Remote Containerの作業ディレクトリを `/work`（ローカルの`./backend`）に設定する
+* Remote Containerの作業ディレクトリを `/var/www/html`（ローカルの`./backend`）に設定する
 
 ### 初回以降
 
 `.devcontainer`があるディレクトリを開けば「Remote Containerで開く？」と聞いてくるので，それに従うだけ。
-タイミングによってはnginxが落ちてる場合があるので，Docker Desktopなどから起動し直すこと。
 
 ## TODO（順不同）
-* nginxをapacheに変更する
+* ~~nginxをapacheに変更する~~
 * phpのデバッガ設定
 * ~~VSCodeでの利用方法~~
 * duskの利用方法

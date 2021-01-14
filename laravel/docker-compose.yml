@@ -13,17 +13,9 @@ services:
       - https_proxy=$HTTPS_PROXY
       - no_proxy=$NO_PROXY
     volumes:
-      - ./backend:/work
-
-  web:
-    container_name: "nginx"
-    image: nginx:1.18-alpine
+      - ./backend:/var/www/html
     ports:
-      - 10080:80
-    volumes:
-      - ./backend:/work
-      - ./infra/nginx/default.conf:/etc/nginx/conf.d/default.conf
-    working_dir: /work
+      - "10080:80"
 
   db:
     container_name: "postgres"

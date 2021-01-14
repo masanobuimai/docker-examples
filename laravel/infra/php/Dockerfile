@@ -1,7 +1,7 @@
-FROM php:7.4-fpm-buster
+FROM php:7.4-apache
 
-ENV COMPOSER_ALLOW_SUPERUSER=1 \
-  COMPOSER_HOME=/composer
+ENV COMPOSER_ALLOW_SUPERUSER=1
+ENV COMPOSER_HOME=/composer
 
 COPY --from=composer:1.10 /usr/bin/composer /usr/bin/composer
 
@@ -14,6 +14,9 @@ RUN apt-get update && \
 
 COPY ./php.ini /usr/local/etc/php/php.ini
 
-WORKDIR /work
+ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
+RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
-SHELL ["/bin/bash", "-oeux", "pipefail", "-c"]
+WORKDIR /var/www/html
+
