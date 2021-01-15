@@ -143,7 +143,6 @@ postgres / password
 * 左下の「`><`」から「Remote-Container: Reopen in Container」を選ぶ
   * 「From 'docker-compose.yml'」と「app」を選ぶ
   * しばらくするとRemote Containerに接続する
-* 左下の「`><`」から「Remote-Container: Reopen Locally」を選び，一旦Remote Containerを抜ける
 * `.devcontainer/devcontainer.json`を開き，以下のように修正する
   * `"workspaceFolder": "/workspace"` を `"workspaceFolder": "/var/www/html"` に書き換える
   * `"extensions": []`を以下のように書き換える
@@ -152,6 +151,7 @@ postgres / password
   "felixfbecker.php-intellisense",
   "felixfbecker.php-debug",
   "onecentlin.laravel-extension-pack",
+  "ms-ossdata.vscode-postgresql",
   "editorconfig.editorconfig",
   "calebporzio.better-phpunit",
   "neilbrayfield.php-docblocker"
@@ -184,18 +184,35 @@ postgres / password
 }
 ```
 
+#### PostgreSQLの接続設定
+
+* コマンドパレット（Ctrl+SHIFT+P）から「PostgreSQL:New Query」を実行する
+* それぞれの質問に以下のように答える
+  * プロファイルの選択 : Enter（Create Connection Profileを選ぶ）
+  * Server name : `postgres`
+  * Database name : `laravel_local`
+  * User name : `postgres`
+  * Password : `password`
+  * Port : Enter （デフォルト:5432のまま）
+  * Profile Name : `postgres` （次回以降，このプロファイルを選べば良い）
+* クエリーシートにSQLを入力して，コンテキストメニューから「Execute Query」を選ぶと実行する
+
+
 ### 初回以降
 
 `.devcontainer`があるディレクトリを開けば「Remote Containerで開く？」と聞いてくるので，それに従うだけ。
 
-デバッガはRemote Container内で，「Run (Ctrl+SHIFT+D)」→「Listen for XDebug」を選べば有効になる。
+* デバッガはRemote Container内で，「Run (Ctrl+SHIFT+D)」→「Listen for XDebug」を選べば有効になる
+* `artisan`コマンドはコマンドパレットから「`Artisan: ～`」を実行する
+* PHPUnitの実行はテストコードを開き，コマンドパレットから「`Better PHPUnit: run`」や「`Better PHPUnit: run suite`」を選ぶ
+
 
 ## TODO（順不同）
 * ~~nginxをapacheに変更する~~
 * ~~phpのデバッガ設定~~
 * ~~VSCodeでの利用方法~~
 * duskの利用方法
-* phpUnitの利用方法
+* ~~phpUnitの利用方法~~
 * その他テストフレームワークの利用方法
 * コードインスペクションの調査と利用方法
 * その他便利機能があれば追加する
