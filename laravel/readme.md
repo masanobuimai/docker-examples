@@ -20,6 +20,7 @@ laravel環境として，apache/php+postgresが含まれるdocker-composeを提�
 ```
 composer create-project --prefer-dist "laravel/laravel=8.*" .
 composer require --dev barryvdh/laravel-ide-helper
+composer require --dev nunomaduro/larastan
 ```
 
 ※このタイミングでide-handlerをインストールしないとartisanにコマンドが追加されなかった（なんでだろ？）
@@ -28,6 +29,10 @@ composer require --dev barryvdh/laravel-ide-helper
 * ホスト側から `http://localhost:10080/` でアクセスできる
 * ホスト側の `./backend` から編集できる
 * `artisan` などLaravelのコマンドはphpコンテナ内で行う
+
+### デバッガを一時的に無効にする
+
+`/usr/local/etc/php/php.ini`の`zend_extension=～`をコメントアウト（先頭に`;`）する
 
 ### PostgreSQLの設定
 
@@ -43,6 +48,94 @@ DB_PASSWORD=password
 ```
 
 `php artisan migrate`を実行するとDBにテーブルができあがる
+
+### コードインスペクション
+
+#### PHP_CodeSniffer
+
+PhpStormで上手く動かないので入れるの止めた。
+
+* https://github.com/squizlabs/PHP_CodeSniffer
+
+インストール
+
+```
+composer require --dev squizlabs/php_codesniffer
+```
+
+使用方法
+
+ * https://www.ritolab.com/entry/188
+
+こんな感じの `phpcs.xml` をルートディレクトリに作る
+```yml
+<?xml version="1.0"?>
+<ruleset name="PSR12/Laravel">
+  <description>PSR12 compliant rules and settings for Laravel</description>
+  <arg name="extensions" value="php" />
+  <rule ref="PSR12" />
+  <arg name="colors" />
+  <arg value="ps" />
+  <exclude-pattern>/bootstrap/</exclude-pattern>
+  <exclude-pattern>/config/</exclude-pattern>
+  <exclude-pattern>/database/</exclude-pattern>
+  <exclude-pattern>/node_modules/</exclude-pattern>
+  <exclude-pattern>/public/</exclude-pattern>
+  <exclude-pattern>/resources/</exclude-pattern>
+  <exclude-pattern>/routes/</exclude-pattern>
+  <exclude-pattern>/storage/</exclude-pattern>
+  <exclude-pattern>/vendor/</exclude-pattern>
+  <exclude-pattern>/server.php</exclude-pattern>
+  <exclude-pattern>/app/Console/Kernel.php</exclude-pattern>
+  <exclude-pattern>/tests/CreatesApplication.php</exclude-pattern>
+</ruleset>
+```
+
+`phpcs`を実行する
+
+```
+./vendor/bin/phpcs --standard=phpcs.xml ./
+```
+
+
+#### Larastan
+
+* https://github.com/nunomaduro/larastan
+
+インストール
+
+```
+composer require --dev nunomaduro/larastan
+```
+
+こんな感じの設定ファイル `phpstan.neon`を用意する
+```
+includes:
+  - ./vendor/nunomaduro/larastan/extension.neon
+
+parameters:
+  paths:
+    - app
+  level: 5
+  checkMissingIterableValueType: false
+```
+
+使用方法
+
+```
+./vendor/bin/phpstan analyse
+```
+
+`composer.json`のスクリプトに登録する
+
+```
+"scripts": {
+    :
+  "larastan": [
+    "@php vendor/bin/phpstan analyze"
+  ]
+}
+```
 
 ## IntelliJ（PhpStorm）から開発する
 
